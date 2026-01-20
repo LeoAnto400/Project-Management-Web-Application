@@ -13,3 +13,16 @@ export async function createTask(task) {
   })
   return res.json()
 }
+
+export async function deleteTask(id) {
+  await fetch(`${API_URL}/tasks/${id}`, {
+    method: "DELETE",
+  })
+}
+
+export async function toggleTask(id) {
+  const res = await fetch(`${API_URL}/tasks/${id}/toggle`, {
+    method: "PATCH",
+  })
+  return res.json()
+}

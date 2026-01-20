@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.task import TaskCreate, TaskRead
 from app.crud.task import create_task
-from app.crud.task import get_tasks, get_task
+from app.crud.task import get_tasks, get_task, delete_task, toggle_task_completed
 from typing import List
 from fastapi import HTTPException
 
@@ -22,6 +22,22 @@ def read_tasks(db: Session = Depends(get_db)):
 @router.get("/{task_id}", response_model=TaskRead)
 def read_task(task_id: int, db: Session = Depends(get_db)):
     task = get_task(db, task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+
+@router.delete("/{task_id}")
+def delete(task_id: int, db: Session = Depends(get_db)):
+    task = delete_task(db, task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {"message": "Task deleted"}
+
+
+@router.patch("/{task_id}/toggle", response_model=TaskRead)
+def toggle(task_id: int, db: Session = Depends(get_db)):
+    task = toggle_task_completed(db, task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task

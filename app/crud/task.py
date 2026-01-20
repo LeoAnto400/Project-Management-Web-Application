@@ -38,4 +38,12 @@ def delete_task(db: Session, task_id: int):
     db.commit()
     return task
 
+def toggle_task_completed(db: Session, task_id: int):
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        return None
+    task.completed = not task.completed
+    db.commit()
+    db.refresh(task)
+    return task
 

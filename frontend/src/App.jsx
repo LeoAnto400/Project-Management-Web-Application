@@ -14,11 +14,24 @@ export default function App() {
     setTasks((prev) => [...prev, task])
   }
 
+  function handleDelete(id) {
+    setTasks((prev) => prev.filter((t) => t.id !== id))
+  }
+
+  function handleToggle(updated) {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updated.id ? updated : t))
+    )
+  }
+
   return (
     <div>
       <h1>Task Manager</h1>
       <TaskForm onTaskCreated={handleTaskCreated} />
-      <TaskList tasks={tasks} />
+      <TaskList 
+        tasks={tasks}
+        onDelete={handleDelete}
+        onToggle={handleToggle} />
     </div>
   )
 }
